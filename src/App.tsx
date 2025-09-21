@@ -5,19 +5,26 @@ import {
   createCrosswordState,
   updateWordStates,
   updateCellHighlighting,
+  validateCrosswordData,
+  getErrorMessage,
   type CrosswordData,
   type ProcessedCrosswordData,
   type CrosswordState,
 } from "./utils/crossword";
-import { createSampleCrossword1 } from "./utils/sampleData";
+import { graniteCrossword1 } from "./utils/sampleData";
 
 function App() {
   // Sample 5x5 crossword data using your format
-  const crosswordData: CrosswordData = createSampleCrossword1();
+  const crosswordData: CrosswordData = graniteCrossword1();
 
   // Process the crossword data using utility functions
   const processedData: ProcessedCrosswordData = useMemo(() => {
     return processCrosswordData(crosswordData);
+  }, [crosswordData]);
+
+  // Validate crossword data
+  const validation = useMemo(() => {
+    return validateCrosswordData(crosswordData);
   }, [crosswordData]);
 
   // Create crossword state
@@ -158,9 +165,6 @@ function App() {
     col: number,
     dir: "across" | "down"
   ) => {
-    const maxCol = crosswordState.cells[0].length;
-    const maxRow = crosswordState.cells.length;
-
     if (dir === "across") {
       // Move left
       for (let c = col - 1; c >= 0; c--) {
@@ -207,10 +211,26 @@ function App() {
       case "ArrowUp":
         for (let r = row - 1; r >= 0; r--) {
           if (!crosswordState.cells[r][col].isBlocked) {
+            const newCell = crosswordState.cells[r][col];
+            // Set direction based on available words in the new cell
+            let newDirection: "across" | "down" = "down";
+            if (
+              newCell.acrossWordNum !== undefined &&
+              newCell.downWordNum === undefined
+            ) {
+              newDirection = "across";
+            } else if (
+              newCell.acrossWordNum === undefined &&
+              newCell.downWordNum !== undefined
+            ) {
+              newDirection = "down";
+            }
+            // If both are available, keep current direction or default to down for vertical movement
+
             setCrosswordState((prev) => ({
               ...prev,
               selectedCell: { row: r, col },
-              currentDirection: "down",
+              currentDirection: newDirection,
             }));
             return;
           }
@@ -219,10 +239,26 @@ function App() {
       case "ArrowDown":
         for (let r = row + 1; r < maxRow; r++) {
           if (!crosswordState.cells[r][col].isBlocked) {
+            const newCell = crosswordState.cells[r][col];
+            // Set direction based on available words in the new cell
+            let newDirection: "across" | "down" = "down";
+            if (
+              newCell.acrossWordNum !== undefined &&
+              newCell.downWordNum === undefined
+            ) {
+              newDirection = "across";
+            } else if (
+              newCell.acrossWordNum === undefined &&
+              newCell.downWordNum !== undefined
+            ) {
+              newDirection = "down";
+            }
+            // If both are available, keep current direction or default to down for vertical movement
+
             setCrosswordState((prev) => ({
               ...prev,
               selectedCell: { row: r, col },
-              currentDirection: "down",
+              currentDirection: newDirection,
             }));
             return;
           }
@@ -231,10 +267,26 @@ function App() {
       case "ArrowLeft":
         for (let c = col - 1; c >= 0; c--) {
           if (!crosswordState.cells[row][c].isBlocked) {
+            const newCell = crosswordState.cells[row][c];
+            // Set direction based on available words in the new cell
+            let newDirection: "across" | "down" = "across";
+            if (
+              newCell.acrossWordNum !== undefined &&
+              newCell.downWordNum === undefined
+            ) {
+              newDirection = "across";
+            } else if (
+              newCell.acrossWordNum === undefined &&
+              newCell.downWordNum !== undefined
+            ) {
+              newDirection = "down";
+            }
+            // If both are available, keep current direction or default to across for horizontal movement
+
             setCrosswordState((prev) => ({
               ...prev,
               selectedCell: { row, col: c },
-              currentDirection: "across",
+              currentDirection: newDirection,
             }));
             return;
           }
@@ -243,10 +295,26 @@ function App() {
       case "ArrowRight":
         for (let c = col + 1; c < maxCol; c++) {
           if (!crosswordState.cells[row][c].isBlocked) {
+            const newCell = crosswordState.cells[row][c];
+            // Set direction based on available words in the new cell
+            let newDirection: "across" | "down" = "across";
+            if (
+              newCell.acrossWordNum !== undefined &&
+              newCell.downWordNum === undefined
+            ) {
+              newDirection = "across";
+            } else if (
+              newCell.acrossWordNum === undefined &&
+              newCell.downWordNum !== undefined
+            ) {
+              newDirection = "down";
+            }
+            // If both are available, keep current direction or default to across for horizontal movement
+
             setCrosswordState((prev) => ({
               ...prev,
               selectedCell: { row, col: c },
-              currentDirection: "across",
+              currentDirection: newDirection,
             }));
             return;
           }
@@ -288,6 +356,18 @@ function App() {
   return (
     <div className="crossword-app">
       <h1>Crossword Puzzle</h1>
+
+      {/* Validation Errors */}
+      {!validation.isValid && (
+        <div className="validation-errors">
+          <h3>⚠️ Validation Errors</h3>
+          {validation.errors.map((error, index) => (
+            <div key={index} className="validation-error">
+              {getErrorMessage(error)}
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="crossword-container">
         <div className="crossword-grid" onKeyDown={handleKeyPress} tabIndex={0}>

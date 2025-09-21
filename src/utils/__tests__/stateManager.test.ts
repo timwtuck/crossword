@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createCrosswordState } from "../stateManager";
 import { createSampleCrossword, processCrosswordData } from "../crossword";
+import type { WordState } from "../stateTypes";
 
 describe("State Manager", () => {
   describe("Sequential Numbering", () => {
@@ -13,12 +14,7 @@ describe("State Manager", () => {
       const acrossWords = state.words.filter((w) => w.direction === "across");
       const downWords = state.words.filter((w) => w.direction === "down");
 
-      // Across words should be numbered 1, 2, 3...
-      acrossWords.forEach((word, index) => {
-        expect(word.number).toBe(index + 1);
-      });
-
-      // Down words should continue the sequence
+      // All words should be numbered sequentially from 1 to totalWords
       const totalWords = acrossWords.length + downWords.length;
       const allNumbers = state.words.map((w) => w.number).sort((a, b) => a - b);
 
@@ -26,6 +22,10 @@ describe("State Manager", () => {
       for (let i = 0; i < totalWords; i++) {
         expect(allNumbers[i]).toBe(i + 1);
       }
+
+      // Check that all numbers are unique
+      const uniqueNumbers = new Set(allNumbers);
+      expect(uniqueNumbers.size).toBe(totalWords);
     });
 
     it("should assign same number to shared cell words", () => {

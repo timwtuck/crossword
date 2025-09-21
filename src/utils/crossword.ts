@@ -2,7 +2,6 @@
 import { detectWords } from "./wordDetection";
 import { extractAnswers } from "./answerExtraction";
 import { createCellGrid } from "./cellProcessing";
-import { validateCrossword } from "./validation";
 import { createSampleCrossword } from "./sampleData";
 import type { CrosswordData, ProcessedCrosswordData } from "./types";
 
@@ -17,12 +16,15 @@ export type {
 } from "./types";
 
 // Re-export main functions
+export { detectWords, extractAnswers, createSampleCrossword };
+
+// Re-export validation functions
 export {
-  detectWords,
-  extractAnswers,
   validateCrossword,
-  createSampleCrossword,
-};
+  validateCrosswordData,
+  getErrorMessage,
+} from "./validation";
+export type { ValidationError, ValidationDataResult } from "./validation";
 
 // Re-export state management
 export {

@@ -61,12 +61,21 @@
   background: #ecf0f1;
 }
 
-.crossword-cell.selected {
-  /* Removed dark blue background - using word highlighting and underline instead */
-}
+/* Selected cell styling is handled by highlighting and underline */
 
 .crossword-cell.highlighted {
   background: #e3f2fd !important;
+  color: #1a237e !important;
+}
+
+.crossword-cell.highlighted .cell-number {
+  color: #0d47a1 !important;
+  font-weight: bold;
+}
+
+.crossword-cell.highlighted .cell-letter {
+  color: #1a237e !important;
+  font-weight: 500;
 }
 
 .crossword-cell.current {
@@ -305,4 +314,33 @@
   .cell-number {
     font-size: 0.6rem;
   }
+}
+
+/* Validation Errors */
+.validation-errors {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.validation-errors h3 {
+  margin: 0 0 0.5rem 0;
+  color: #721c24;
+  font-size: 1.1rem;
+}
+
+.validation-error {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: #f1b0b7;
+  border-left: 3px solid #dc3545;
+  border-radius: 3px;
+  color: #721c24;
+  font-size: 0.9rem;
+}
+
+.validation-error:last-child {
+  margin-bottom: 0;
 }
