@@ -424,6 +424,7 @@ function App() {
             <h3>Across</h3>
             {updatedWords
               .filter((word) => word.direction === "across")
+              .sort((a, b) => a.number - b.number)
               .map((word) => (
                 <div
                   key={`across-${word.number}`}
@@ -441,7 +442,10 @@ function App() {
                   onClick={() => handleClueClick(word.number, "across")}
                 >
                   <span className="clue-number">{word.number}.</span>
-                  <span className="clue-text">{word.clue}</span>
+                  <span className="clue-text">
+                    {word.clue}{" "}
+                    <span className="clue-length">({word.answer.length})</span>
+                  </span>
                 </div>
               ))}
           </div>
@@ -450,6 +454,7 @@ function App() {
             <h3>Down</h3>
             {updatedWords
               .filter((word) => word.direction === "down")
+              .sort((a, b) => a.number - b.number)
               .map((word) => (
                 <div
                   key={`down-${word.number}`}
@@ -467,7 +472,10 @@ function App() {
                   onClick={() => handleClueClick(word.number, "down")}
                 >
                   <span className="clue-number">{word.number}.</span>
-                  <span className="clue-text">{word.clue}</span>
+                  <span className="clue-text">
+                    {word.clue}{" "}
+                    <span className="clue-length">({word.answer.length})</span>
+                  </span>
                 </div>
               ))}
           </div>
