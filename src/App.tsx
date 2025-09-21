@@ -11,11 +11,20 @@ import {
   type ProcessedCrosswordData,
   type CrosswordState,
 } from "./utils/crossword";
-import { graniteCrossword1 } from "./utils/sampleData";
+import { crosswordOptions } from "./data";
+import { CrosswordSelector } from "./components/CrosswordSelector";
 
 function App() {
-  // Sample 5x5 crossword data using your format
-  const crosswordData: CrosswordData = graniteCrossword1();
+  // State for selected crossword
+  const [selectedCrosswordId, setSelectedCrosswordId] = useState("granite-1");
+
+  // Get the selected crossword data
+  const crosswordData: CrosswordData = useMemo(() => {
+    const option = crosswordOptions.find(
+      (opt) => opt.id === selectedCrosswordId
+    );
+    return option ? option.data() : crosswordOptions[0].data();
+  }, [selectedCrosswordId]);
 
   // Process the crossword data using utility functions
   const processedData: ProcessedCrosswordData = useMemo(() => {
@@ -31,6 +40,11 @@ function App() {
   const [crosswordState, setCrosswordState] = useState<CrosswordState>(() =>
     createCrosswordState(crosswordData, processedData)
   );
+
+  // Reset crossword state when crossword changes
+  useMemo(() => {
+    setCrosswordState(createCrosswordState(crosswordData, processedData));
+  }, [crosswordData, processedData]);
 
   // Update word states when cells change
   const updatedWords = useMemo(() => {
@@ -356,6 +370,13 @@ function App() {
   return (
     <div className="crossword-app">
       <h1>Crossword Puzzle</h1>
+
+      {/* Crossword Selector */}
+      <CrosswordSelector
+        selectedCrossword={selectedCrosswordId}
+        onCrosswordChange={setSelectedCrosswordId}
+        crosswords={crosswordOptions}
+      />
 
       {/* Validation Errors */}
       {!validation.isValid && (

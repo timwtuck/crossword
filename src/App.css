@@ -316,6 +316,54 @@
   }
 }
 
+/* Crossword Selector */
+.crossword-selector {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.crossword-selector h2 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.2rem;
+}
+
+.crossword-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.crossword-tab {
+  padding: 0.5rem 1rem;
+  background: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.crossword-tab:hover {
+  background: #dee2e6;
+  border-color: #adb5bd;
+}
+
+.crossword-tab.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.crossword-tab.active:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
 /* Validation Errors */
 .validation-errors {
   margin-bottom: 2rem;
