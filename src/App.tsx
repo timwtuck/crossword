@@ -17,6 +17,7 @@ import { CrosswordSelector } from "./components/CrosswordSelector";
 function App() {
   // State for selected crossword
   const [selectedCrosswordId, setSelectedCrosswordId] = useState("granite-1");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Get the selected crossword data
   const crosswordData: CrosswordData = useMemo(() => {
@@ -369,14 +370,27 @@ function App() {
 
   return (
     <div className="crossword-app">
-      <h1>Crossword Puzzle</h1>
+      {/* Header with title and menu button */}
+      <div className="app-header">
+        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+          ☰
+        </button>
+        <h1>Crossword Puzzle</h1>
+      </div>
 
-      {/* Crossword Selector */}
-      <CrosswordSelector
-        selectedCrossword={selectedCrosswordId}
-        onCrosswordChange={setSelectedCrosswordId}
-        crosswords={crosswordOptions}
-      />
+      {/* Sliding Menu */}
+      <div className={`sliding-menu ${menuOpen ? "open" : ""}`}>
+        <CrosswordSelector
+          selectedCrossword={selectedCrosswordId}
+          onCrosswordChange={setSelectedCrosswordId}
+          crosswords={crosswordOptions}
+        />
+      </div>
+
+      {/* Menu Overlay */}
+      {menuOpen && (
+        <div className="menu-overlay" onClick={() => setMenuOpen(false)} />
+      )}
 
       {/* Validation Errors */}
       {!validation.isValid && (
@@ -420,8 +434,8 @@ function App() {
         </div>
 
         <div className="clues-section">
-          <div className="clues-column">
-            <h3>Across</h3>
+          <div className="clues-group">
+            <h4>Across</h4>
             {updatedWords
               .filter((word) => word.direction === "across")
               .sort((a, b) => a.number - b.number)
@@ -450,8 +464,8 @@ function App() {
               ))}
           </div>
 
-          <div className="clues-column">
-            <h3>Down</h3>
+          <div className="clues-group">
+            <h4>Down</h4>
             {updatedWords
               .filter((word) => word.direction === "down")
               .sort((a, b) => a.number - b.number)
