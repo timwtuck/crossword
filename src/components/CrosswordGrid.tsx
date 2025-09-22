@@ -1,6 +1,6 @@
 import React from "react";
 import { CrosswordCell } from "./CrosswordCell";
-import type { CellState, CrosswordState } from "../utils/stateTypes";
+import type { CellState } from "../utils/stateTypes";
 
 interface CrosswordGridProps {
   cells: CellState[][];

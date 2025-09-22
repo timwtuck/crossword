@@ -1,4 +1,3 @@
-import React from "react";
 import type { CrosswordData } from "../utils/types";
 
 interface CrosswordOption {

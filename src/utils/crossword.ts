@@ -50,13 +50,47 @@ export function processCrosswordData(
   const acrossWords = wordsWithAnswers.filter((w) => w.direction === "across");
   const downWords = wordsWithAnswers.filter((w) => w.direction === "down");
 
-  // Assign clues to words in order
-  acrossWords.forEach((word, index) => {
-    word.clue = crosswordData.clues.across[index] || "";
+  // Create a map of word positions to clues for proper assignment
+  const acrossClueMap = new Map<string, string>();
+  const downClueMap = new Map<string, string>();
+
+  // Map clues to their expected positions based on sequential numbering
+  let acrossIndex = 0;
+  let downIndex = 0;
+
+  // Sort words by their grid position (top-left to bottom-right) to match sequential numbering
+  const sortedAcrossWords = [...acrossWords].sort((a, b) => {
+    if (a.startRow !== b.startRow) return a.startRow - b.startRow;
+    return a.startCol - b.startCol;
   });
 
-  downWords.forEach((word, index) => {
-    word.clue = crosswordData.clues.down[index] || "";
+  const sortedDownWords = [...downWords].sort((a, b) => {
+    if (a.startRow !== b.startRow) return a.startRow - b.startRow;
+    return a.startCol - b.startCol;
+  });
+
+  // Assign clues based on grid position order
+  sortedAcrossWords.forEach((word) => {
+    const key = `${word.startRow}-${word.startCol}`;
+    acrossClueMap.set(key, crosswordData.clues.across[acrossIndex] || "");
+    acrossIndex++;
+  });
+
+  sortedDownWords.forEach((word) => {
+    const key = `${word.startRow}-${word.startCol}`;
+    downClueMap.set(key, crosswordData.clues.down[downIndex] || "");
+    downIndex++;
+  });
+
+  // Apply clues to original word arrays
+  acrossWords.forEach((word) => {
+    const key = `${word.startRow}-${word.startCol}`;
+    word.clue = acrossClueMap.get(key) || "";
+  });
+
+  downWords.forEach((word) => {
+    const key = `${word.startRow}-${word.startCol}`;
+    word.clue = downClueMap.get(key) || "";
   });
 
   // Create cell data with word information
