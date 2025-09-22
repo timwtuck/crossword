@@ -425,7 +425,9 @@ function App() {
                     <span className="cell-number">{cell.numberValue}</span>
                   )}
                   <span className="cell-letter">
-                    {crosswordState.showAnswers ? cell.answer : cell.letter}
+                    {crosswordState.showAnswers
+                      ? cell.answer.toUpperCase()
+                      : cell.letter}
                   </span>
                 </div>
               ))}
@@ -506,7 +508,7 @@ function App() {
           }
           className="toggle-answers-btn"
         >
-          {crosswordState.showAnswers ? "Hide" : "Show"} Answers
+          {crosswordState.showAnswers ? "HIDE" : "SHOW"} ANSWERS
         </button>
         <div className="progress">
           Progress: {updatedWords.filter((w) => w.isCorrect).length}/
