@@ -1,6 +1,5 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CurrentClue } from "../CurrentClue";
 import type { WordState } from "../../utils/stateTypes";
 
@@ -107,49 +106,88 @@ describe("CurrentClue Component", () => {
     expect(mockOnRevealAnswer).toHaveBeenCalledWith(1, "across");
   });
 
-  it("shows complete status when word is complete and correct", () => {
-    const completeWords: WordState[] = [
-      {
-        ...mockWords[0],
-        userAnswer: "TEST",
-        isComplete: true,
-        isCorrect: true,
-      },
-    ];
-
+  it("shows revealed answer when reveal button is clicked", () => {
     render(
       <CurrentClue
         selectedCell={{ row: 0, col: 0 }}
         currentDirection="across"
-        words={completeWords}
+        words={mockWords}
         onRevealAnswer={mockOnRevealAnswer}
       />
     );
 
-    expect(screen.getByText("✓ Complete")).toBeInTheDocument();
+    const revealButton = screen.getByText("Reveal Answer");
+    fireEvent.click(revealButton);
+
+    expect(screen.getByText("TEST")).toBeInTheDocument();
     expect(screen.queryByText("Reveal Answer")).not.toBeInTheDocument();
   });
 
-  it("disables reveal button when word is complete and correct", () => {
-    const completeWords: WordState[] = [
-      {
-        ...mockWords[0],
-        userAnswer: "TEST",
-        isComplete: true,
-        isCorrect: true,
-      },
-    ];
-
+  it("hides answer when hide button is clicked", () => {
     render(
       <CurrentClue
         selectedCell={{ row: 0, col: 0 }}
         currentDirection="across"
-        words={completeWords}
+        words={mockWords}
         onRevealAnswer={mockOnRevealAnswer}
       />
     );
 
-    const button = screen.getByText("✓ Complete");
-    expect(button).toBeDisabled();
+    // First reveal the answer
+    const revealButton = screen.getByText("Reveal Answer");
+    fireEvent.click(revealButton);
+
+    expect(screen.getByText("TEST")).toBeInTheDocument();
+
+    // Then hide it by clicking the button again
+    const hideButton = screen.getByText("TEST");
+    fireEvent.click(hideButton);
+
+    expect(screen.queryByText("TEST")).not.toBeInTheDocument();
+    expect(screen.getByText("Reveal Answer")).toBeInTheDocument();
+  });
+
+  it("maintains separate reveal state for different clues", () => {
+    const { rerender } = render(
+      <CurrentClue
+        selectedCell={{ row: 0, col: 0 }}
+        currentDirection="across"
+        words={mockWords}
+        onRevealAnswer={mockOnRevealAnswer}
+      />
+    );
+
+    // Reveal answer for across clue
+    const revealButton = screen.getByText("Reveal Answer");
+    fireEvent.click(revealButton);
+
+    expect(screen.getByText("TEST")).toBeInTheDocument();
+
+    // Switch to down clue
+    rerender(
+      <CurrentClue
+        selectedCell={{ row: 0, col: 0 }}
+        currentDirection="down"
+        words={mockWords}
+        onRevealAnswer={mockOnRevealAnswer}
+      />
+    );
+
+    // Down clue should not have answer revealed
+    expect(screen.queryByText("Answer: WORD")).not.toBeInTheDocument();
+    expect(screen.getByText("Reveal Answer")).toBeInTheDocument();
+
+    // Switch back to across clue
+    rerender(
+      <CurrentClue
+        selectedCell={{ row: 0, col: 0 }}
+        currentDirection="across"
+        words={mockWords}
+        onRevealAnswer={mockOnRevealAnswer}
+      />
+    );
+
+    // Across clue should still have answer revealed
+    expect(screen.getByText("TEST")).toBeInTheDocument();
   });
 });

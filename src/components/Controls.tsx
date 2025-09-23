@@ -12,13 +12,13 @@ export const Controls: React.FC<ControlsProps> = ({
   onToggleAnswers,
   words,
 }) => {
-  // Count words that have been started (have at least one letter filled)
-  const startedWords = words.filter((w) => w.userAnswer.length > 0).length;
+  // Count words that are complete (regardless of correctness)
+  const completedWords = words.filter((w) => w.isComplete).length;
   const totalWords = words.length;
 
   // Calculate completion percentage
   const completionPercentage =
-    totalWords > 0 ? Math.round((startedWords / totalWords) * 100) : 0;
+    totalWords > 0 ? Math.round((completedWords / totalWords) * 100) : 0;
 
   return (
     <div className="controls">
@@ -26,7 +26,7 @@ export const Controls: React.FC<ControlsProps> = ({
         {showAnswers ? "HIDE" : "SHOW"} ANSWERS
       </button>
       <div className="progress">
-        Progress: {startedWords}/{totalWords} words started (
+        Progress: {completedWords}/{totalWords} words completed (
         {completionPercentage}%)
       </div>
     </div>

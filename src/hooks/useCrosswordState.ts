@@ -39,29 +39,10 @@ export const useCrosswordState = (
 
   const revealAnswer = useCallback(
     (wordNumber: number, direction: "across" | "down") => {
-      setCrosswordState((prev) => {
-        const newCells = [...prev.cells];
-        const word = prev.words.find(
-          (w) => w.number === wordNumber && w.direction === direction
-        );
-
-        if (word) {
-          // Fill in the answer for this word
-          word.cells.forEach((cell, index) => {
-            if (newCells[cell.row] && newCells[cell.row][cell.col]) {
-              newCells[cell.row][cell.col] = {
-                ...newCells[cell.row][cell.col],
-                letter: word.answer[index],
-              };
-            }
-          });
-        }
-
-        return {
-          ...prev,
-          cells: newCells,
-        };
-      });
+      // This function is now just a placeholder since we're showing the answer
+      // in the clue section instead of filling it in the grid
+      // The actual answer display is handled in the CurrentClue component
+      console.log(`Revealing answer for ${wordNumber} ${direction}`);
     },
     []
   );

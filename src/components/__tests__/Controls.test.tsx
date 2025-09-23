@@ -1,6 +1,5 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Controls } from "../Controls";
 import type { WordState } from "../../utils/stateTypes";
 
@@ -45,7 +44,7 @@ describe("Controls Component - Updated Progress", () => {
     vi.clearAllMocks();
   });
 
-  it("shows progress based on started words, not correct words", () => {
+  it("shows progress based on completed words, not correct words", () => {
     render(
       <Controls
         showAnswers={false}
@@ -54,16 +53,17 @@ describe("Controls Component - Updated Progress", () => {
       />
     );
 
-    // Should show 2/3 words started (66%) instead of 1/3 correct
+    // Should show 1/3 words completed (33%) instead of 1/3 correct
     expect(
-      screen.getByText("Progress: 2/3 words started (67%)")
+      screen.getByText("Progress: 1/3 words completed (33%)")
     ).toBeInTheDocument();
   });
 
-  it("shows 0% when no words are started", () => {
+  it("shows 0% when no words are completed", () => {
     const emptyWords: WordState[] = mockWords.map((word) => ({
       ...word,
       userAnswer: "",
+      isComplete: false,
     }));
 
     render(
@@ -75,26 +75,27 @@ describe("Controls Component - Updated Progress", () => {
     );
 
     expect(
-      screen.getByText("Progress: 0/3 words started (0%)")
+      screen.getByText("Progress: 0/3 words completed (0%)")
     ).toBeInTheDocument();
   });
 
-  it("shows 100% when all words are started", () => {
-    const allStartedWords: WordState[] = mockWords.map((word) => ({
+  it("shows 100% when all words are completed", () => {
+    const allCompletedWords: WordState[] = mockWords.map((word) => ({
       ...word,
-      userAnswer: word.answer.substring(0, 1), // At least one letter
+      userAnswer: word.answer, // Complete word
+      isComplete: true,
     }));
 
     render(
       <Controls
         showAnswers={false}
         onToggleAnswers={mockOnToggleAnswers}
-        words={allStartedWords}
+        words={allCompletedWords}
       />
     );
 
     expect(
-      screen.getByText("Progress: 3/3 words started (100%)")
+      screen.getByText("Progress: 3/3 words completed (100%)")
     ).toBeInTheDocument();
   });
 
@@ -108,7 +109,7 @@ describe("Controls Component - Updated Progress", () => {
     );
 
     expect(
-      screen.getByText("Progress: 0/0 words started (0%)")
+      screen.getByText("Progress: 0/0 words completed (0%)")
     ).toBeInTheDocument();
   });
 

@@ -75,20 +75,22 @@ function App() {
       )}
 
       <div className="crossword-container">
-        <CurrentClue
-          selectedCell={crosswordState.selectedCell}
-          currentDirection={crosswordState.currentDirection}
-          words={updatedWords}
-          onRevealAnswer={revealAnswer}
-        />
+        <div className="crossword-left-section">
+          <CurrentClue
+            selectedCell={crosswordState.selectedCell}
+            currentDirection={crosswordState.currentDirection}
+            words={updatedWords}
+            onRevealAnswer={revealAnswer}
+          />
 
-        <CrosswordGrid
-          cells={highlightedCells}
-          selectedCell={crosswordState.selectedCell}
-          showAnswers={crosswordState.showAnswers}
-          onCellClick={handleCellClick}
-          onKeyDown={handleKeyPress}
-        />
+          <CrosswordGrid
+            cells={highlightedCells}
+            selectedCell={crosswordState.selectedCell}
+            showAnswers={crosswordState.showAnswers}
+            onCellClick={handleCellClick}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
 
         <CluesSection
           words={updatedWords}

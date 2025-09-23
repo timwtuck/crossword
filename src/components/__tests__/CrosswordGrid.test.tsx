@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CrosswordGrid } from "../CrosswordGrid";
 import type { CellState } from "../../utils/stateTypes";
 
@@ -16,6 +16,7 @@ const mockCells: CellState[][] = [
       acrossWordNum: 1,
       downWordNum: undefined,
       isHighlighted: false,
+      isSelected: false,
     },
     {
       letter: "",
@@ -26,6 +27,7 @@ const mockCells: CellState[][] = [
       acrossWordNum: 1,
       downWordNum: undefined,
       isHighlighted: false,
+      isSelected: false,
     },
   ],
 ];

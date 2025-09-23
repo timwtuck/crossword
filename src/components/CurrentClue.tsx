@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { WordState } from "../utils/stateTypes";
 
 interface CurrentClueProps {
@@ -14,6 +14,10 @@ export const CurrentClue: React.FC<CurrentClueProps> = ({
   words,
   onRevealAnswer,
 }) => {
+  const [revealedAnswers, setRevealedAnswers] = useState<Set<string>>(
+    new Set()
+  );
+
   // Find the current word based on selected cell and direction
   const currentWord = selectedCell
     ? words.find((word) => {
@@ -31,7 +35,12 @@ export const CurrentClue: React.FC<CurrentClueProps> = ({
     return (
       <div className="current-clue">
         <div className="current-clue-content">
-          <p className="no-clue-message">Click on a cell to see the clue</p>
+          <div className="clue-header">
+            <div className="clue-info">
+              <span className="clue-number">No Clue</span>
+            </div>
+          </div>
+          <div className="clue-text">Click on a cell to see the clue</div>
         </div>
       </div>
     );
@@ -40,30 +49,44 @@ export const CurrentClue: React.FC<CurrentClueProps> = ({
   const isWordComplete =
     currentWord.userAnswer.length === currentWord.answer.length;
   const isWordCorrect = currentWord.isCorrect;
+  const wordKey = `${currentWord.number}-${currentWord.direction}`;
+  const isAnswerRevealed = revealedAnswers.has(wordKey);
+
+  const handleRevealAnswer = () => {
+    if (isAnswerRevealed) {
+      // Hide the answer
+      setRevealedAnswers((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(wordKey);
+        return newSet;
+      });
+    } else {
+      // Show the answer
+      setRevealedAnswers((prev) => new Set(prev).add(wordKey));
+      onRevealAnswer(currentWord.number, currentWord.direction);
+    }
+  };
 
   return (
     <div className="current-clue">
+      <button
+        className={`reveal-answer-btn ${isAnswerRevealed ? "revealed" : ""}`}
+        onClick={handleRevealAnswer}
+      >
+        {isAnswerRevealed ? currentWord.answer : "Reveal Answer"}
+      </button>
       <div className="current-clue-content">
         <div className="clue-header">
-          <span className="clue-number">
-            {currentWord.number} {currentWord.direction.toUpperCase()}
-          </span>
-          <span className="clue-length">
-            ({currentWord.answer.length} letters)
-          </span>
+          <div className="clue-info">
+            <span className="clue-number">
+              {currentWord.number} {currentWord.direction.toUpperCase()}
+            </span>
+            <span className="clue-length">
+              ({currentWord.answer.length} letters)
+            </span>
+          </div>
         </div>
         <div className="clue-text">{currentWord.clue}</div>
-        <div className="clue-actions">
-          <button
-            className="reveal-answer-btn"
-            onClick={() =>
-              onRevealAnswer(currentWord.number, currentWord.direction)
-            }
-            disabled={isWordComplete && isWordCorrect}
-          >
-            {isWordComplete && isWordCorrect ? "✓ Complete" : "Reveal Answer"}
-          </button>
-        </div>
       </div>
     </div>
   );
