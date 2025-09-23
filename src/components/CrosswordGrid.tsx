@@ -39,13 +39,53 @@ export const CrosswordGrid: React.FC<CrosswordGridProps> = ({
   }, [selectedCell]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Prevent the input from showing the typed character
+    const value = e.target.value;
+    if (value.length > 0) {
+      // Get the last character typed
+      const lastChar = value[value.length - 1].toUpperCase();
+
+      // Create a simple synthetic keyboard event
+      const syntheticEvent = {
+        key: lastChar,
+        code: `Key${lastChar}`,
+        keyCode: lastChar.charCodeAt(0),
+        which: lastChar.charCodeAt(0),
+        charCode: lastChar.charCodeAt(0),
+        altKey: false,
+        ctrlKey: false,
+        metaKey: false,
+        shiftKey: false,
+        getModifierState: () => false,
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        target: e.target,
+        currentTarget: e.target,
+        type: "keydown",
+        bubbles: true,
+        cancelable: true,
+        defaultPrevented: false,
+        eventPhase: 2,
+        isTrusted: false,
+        nativeEvent: e.nativeEvent,
+        timeStamp: Date.now(),
+        detail: 0,
+        view: null,
+      } as any;
+
+      // Forward the synthetic event to the key handler
+      onKeyDown(syntheticEvent);
+    }
+
+    // Clear the input after processing
     e.target.value = "";
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Convert input event to the same format as the grid keydown
-    onKeyDown(e as any);
+    // For special keys (Enter, Backspace, Arrow keys, etc.), forward directly
+    if (e.key.length > 1 || e.key === " ") {
+      onKeyDown(e as any);
+    }
+    // For regular characters, let handleInputChange handle them
   };
 
   const handleInputBlur = () => {
@@ -70,8 +110,11 @@ export const CrosswordGrid: React.FC<CrosswordGridProps> = ({
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
+        autoSave="off"
         spellCheck="false"
         inputMode="text"
+        data-lpignore="true"
+        data-form-type="other"
         style={{
           position: "absolute",
           left: "-9999px",
