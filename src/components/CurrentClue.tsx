@@ -46,9 +46,6 @@ export const CurrentClue: React.FC<CurrentClueProps> = ({
     );
   }
 
-  const isWordComplete =
-    currentWord.userAnswer.length === currentWord.answer.length;
-  const isWordCorrect = currentWord.isCorrect;
   const wordKey = `${currentWord.number}-${currentWord.direction}`;
   const isAnswerRevealed = revealedAnswers.has(wordKey);
 
