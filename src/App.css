@@ -146,6 +146,11 @@
     padding: 0 0.5rem;
     margin-bottom: 0.5rem;
   }
+  
+  .current-clue {
+    order: 0;
+    margin-bottom: 0.8rem;
+  }
 
   .crossword-app h1 {
     font-size: 1.4rem;
@@ -223,6 +228,21 @@
     max-width: min(100vw, calc(100vh - 120px)) !important;
     max-height: min(100vw, calc(100vh - 120px)) !important;
   }
+  
+  .current-clue {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .clue-text {
+    font-size: 0.95rem;
+  }
+  
+  .reveal-answer-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
 
   .crossword-container {
     height: auto;
@@ -736,6 +756,78 @@
   border-radius: 6px;
   font-weight: bold;
   color: #495057;
+}
+
+/* Current Clue Display */
+.current-clue {
+  background: #f8f9fa;
+  border: 2px solid #2c3e50;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.current-clue-content {
+  text-align: left;
+}
+
+.clue-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.clue-number {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.clue-length {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.clue-text {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.clue-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.reveal-answer-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.reveal-answer-btn:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.reveal-answer-btn:disabled {
+  background: #27ae60;
+  cursor: not-allowed;
+}
+
+.no-clue-message {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin: 0;
 }
 
 /* Instructions */

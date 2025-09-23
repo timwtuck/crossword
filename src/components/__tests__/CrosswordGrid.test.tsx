@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { vi } from "vitest";
 import { CrosswordGrid } from "../CrosswordGrid";
 import type { CellState } from "../../utils/stateTypes";
 
@@ -30,11 +31,11 @@ const mockCells: CellState[][] = [
 ];
 
 describe("CrosswordGrid Mobile Keyboard Support", () => {
-  const mockOnCellClick = jest.fn();
-  const mockOnKeyDown = jest.fn();
+  const mockOnCellClick = vi.fn();
+  const mockOnKeyDown = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("renders hidden input for mobile keyboard support", () => {

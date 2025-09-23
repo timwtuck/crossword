@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   createCrosswordState,
   updateWordStates,
@@ -37,10 +37,40 @@ export const useCrosswordState = (
     crosswordState.currentDirection,
   ]);
 
+  const revealAnswer = useCallback(
+    (wordNumber: number, direction: "across" | "down") => {
+      setCrosswordState((prev) => {
+        const newCells = [...prev.cells];
+        const word = prev.words.find(
+          (w) => w.number === wordNumber && w.direction === direction
+        );
+
+        if (word) {
+          // Fill in the answer for this word
+          word.cells.forEach((cell, index) => {
+            if (newCells[cell.row] && newCells[cell.row][cell.col]) {
+              newCells[cell.row][cell.col] = {
+                ...newCells[cell.row][cell.col],
+                letter: word.answer[index],
+              };
+            }
+          });
+        }
+
+        return {
+          ...prev,
+          cells: newCells,
+        };
+      });
+    },
+    []
+  );
+
   return {
     crosswordState,
     setCrosswordState,
     updatedWords,
     highlightedCells,
+    revealAnswer,
   };
 };

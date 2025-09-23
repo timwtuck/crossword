@@ -11,6 +11,7 @@ import { CluesSection } from "./components/CluesSection";
 import { Controls } from "./components/Controls";
 import { Instructions } from "./components/Instructions";
 import { CompletionMessage } from "./components/CompletionMessage";
+import { CurrentClue } from "./components/CurrentClue";
 
 function App() {
   // State for selected crossword
@@ -22,8 +23,13 @@ function App() {
     useCrosswordData(selectedCrosswordId);
 
   // Manage crossword state using custom hook
-  const { crosswordState, setCrosswordState, updatedWords, highlightedCells } =
-    useCrosswordState(crosswordData, processedData);
+  const {
+    crosswordState,
+    setCrosswordState,
+    updatedWords,
+    highlightedCells,
+    revealAnswer,
+  } = useCrosswordState(crosswordData, processedData);
 
   // Get navigation handlers from custom hook
   const { handleCellClick, handleKeyPress, handleClueClick } =
@@ -69,6 +75,13 @@ function App() {
       )}
 
       <div className="crossword-container">
+        <CurrentClue
+          selectedCell={crosswordState.selectedCell}
+          currentDirection={crosswordState.currentDirection}
+          words={updatedWords}
+          onRevealAnswer={revealAnswer}
+        />
+
         <CrosswordGrid
           cells={highlightedCells}
           selectedCell={crosswordState.selectedCell}
