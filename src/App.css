@@ -169,6 +169,23 @@
   outline: none;
   width: min(70vw, calc(100vh - 200px));
   height: min(70vw, calc(100vh - 200px));
+  position: relative;
+}
+
+/* Mobile input for keyboard support */
+.mobile-input {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  font-size: 1px !important;
+  color: transparent !important;
+  caret-color: transparent !important;
 }
 
 /* Responsive crossword grid */
@@ -179,6 +196,9 @@
     max-width: 100% !important;
     order: 1;
     overflow: visible;
+    /* Improve touch interaction */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
   }
 }
 
@@ -802,6 +822,9 @@
 @media (max-width: 480px) {
   .crossword-cell {
     font-size: 0.9rem;
+    /* Improve touch interaction on mobile */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
   }
 
   .cell-letter {
