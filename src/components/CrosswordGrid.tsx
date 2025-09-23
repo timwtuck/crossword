@@ -27,6 +27,7 @@ export const CrosswordGrid: React.FC<CrosswordGridProps> = ({
   onKeyDown,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const processingInput = useRef(false);
 
   // Focus the input when a cell is selected (for mobile keyboard)
   useEffect(() => {
@@ -39,8 +40,12 @@ export const CrosswordGrid: React.FC<CrosswordGridProps> = ({
   }, [selectedCell]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (processingInput.current) return;
+
     const value = e.target.value;
     if (value.length > 0) {
+      processingInput.current = true;
+
       // Get the last character typed
       const lastChar = value[value.length - 1].toUpperCase();
 
@@ -74,18 +79,26 @@ export const CrosswordGrid: React.FC<CrosswordGridProps> = ({
 
       // Forward the synthetic event to the key handler
       onKeyDown(syntheticEvent);
-    }
 
-    // Clear the input after processing
-    e.target.value = "";
+      // Clear the input after processing
+      e.target.value = "";
+
+      // Reset the flag after a short delay
+      setTimeout(() => {
+        processingInput.current = false;
+      }, 10);
+    }
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // For special keys (Enter, Backspace, Arrow keys, etc.), forward directly
     if (e.key.length > 1 || e.key === " ") {
       onKeyDown(e as any);
+    } else if (!processingInput.current) {
+      // For regular characters, prevent default to avoid double input
+      // Only if we're not already processing input
+      e.preventDefault();
     }
-    // For regular characters, let handleInputChange handle them
   };
 
   const handleInputBlur = () => {
